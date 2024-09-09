@@ -1,14 +1,13 @@
 class ResponseBuilder
-  BASE_RESPONSE = {
-    properties: {}
-  }.freeze
+  class << self
+    def build(context)
+      context.to_h.slice(*permitted_params)
+    end
 
-  def self.build(context)
-    BASE_RESPONSE[:properties].merge(
-      valid: context[:valid],
-      tin_type: context[:tin_type],
-      formatted_tin: context[:formatted_tin],
-      errors: context[:errors]
-    )
+    private
+
+    def permitted_params
+      %i[valid tin_type formatted_tin errors business_registration]
+    end
   end
 end

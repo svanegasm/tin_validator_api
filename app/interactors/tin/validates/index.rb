@@ -20,6 +20,7 @@ module Tin
         context.tin_type = validation_response[:tin_type]
         context.formatted_tin = validation_response[:formatted_tin]
         context.errors += validation_response[:errors]
+        context.business_registration = validation_response[:business_registration] if validation_response[:business_registration].present?
       end
 
       private

@@ -97,6 +97,30 @@ RSpec.describe Api::V1::Tin::ValidatesController, type: :controller do
         expect(json_response['formatted_tin']).to be_nil
         expect(json_response['errors']).to include(I18n.t('tin.validates.invalid_tin'))
       end
+
+      it 'external service validation response invalid' do
+        tin = '10000000000'
+        get(:index, params: { tin:, country_code: })
+
+        expect(json_response['valid']).to eq(false)
+        expect(json_response['errors']).to eq(['business is not GST registered'])
+      end
+
+      it 'external service validation return 500 http code' do
+        tin = '53004085616'
+        get(:index, params: { tin:, country_code: })
+
+        expect(json_response['valid']).to eq(false)
+        expect(json_response['errors']).to eq(['registration API could not be reached'])
+      end
+
+      it 'external service validation return 404 http code' do
+        tin = '51824753556'
+        get(:index, params: { tin:, country_code: })
+
+        expect(json_response['valid']).to eq(false)
+        expect(json_response['errors']).to eq(['business is not registered'])
+      end
     end
 
     context 'Not implemented Country Code' do

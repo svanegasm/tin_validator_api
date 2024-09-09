@@ -2,9 +2,11 @@ source 'https://rubygems.org'
 
 ruby file: '.ruby-version'
 
+gem 'httparty'
 gem 'interactor'
 gem 'puma', '>= 5.0'
 gem 'rails', '~> 7.1.3', '>= 7.1.3.2'
+gem 'rexml'
 gem 'rubocop'
 gem 'sqlite3', '~> 1.4'
 gem 'tzinfo-data', platforms: %i[windows jruby]

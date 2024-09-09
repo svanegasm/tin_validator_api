@@ -4,14 +4,22 @@ module Tin
       ABN_REGEXP = /(\d{2})(\d{3})(\d{3})(\d{3})/
       ACN_REGEXP = /(\d{3})(\d{3})(\d{3})/
 
+      def validate
+        base_response = super
+        return base_response unless tin_type == 'abn'
+
+        external_validation(base_response)
+      end
+
       private
 
       def tin_type
-        @tin_type ||= begin
-          return 'abn' if tin.length == 11
-
-          'acn' if tin.length == 9
-        end
+        @tin_type ||= case tin.length
+                      when 11
+                        'abn'
+                      when 9
+                        'acn'
+                      end
       end
 
       def valid_tin?
@@ -41,6 +49,18 @@ module Tin
         end.sum
 
         (sum % 89).zero?
+      end
+
+      def external_validation(base_response)
+        abn_service = AbnValidationService.new(tin)
+        external_response = abn_service.validate_with_external_service
+        base_response[:errors] << external_response[:error] if external_response[:error].present?
+
+        base_response.merge!(
+          valid: external_response[:valid],
+          business_registration: external_response[:business_registration],
+          errors: base_response[:errors]
+        )
       end
     end
   end

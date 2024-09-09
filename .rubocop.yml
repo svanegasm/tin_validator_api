@@ -10,3 +10,7 @@ require:
 
 Style/Documentation:
   Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "spec/controllers/api/v1/tin/validates_controller_spec.rb"
