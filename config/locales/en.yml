@@ -29,3 +29,9 @@
 
 en:
   hello: "Hello world"
+  tin:
+    validates:
+      field_empty: "%s can't be blank"
+      not_implemented: "TIN validation not implemented for %s country code"
+      invalid_length: "Invalid TIN length"
+      invalid_tin: "Invalid TIN"
