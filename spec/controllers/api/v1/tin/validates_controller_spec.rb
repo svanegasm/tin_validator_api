@@ -77,15 +77,25 @@ RSpec.describe Api::V1::Tin::ValidatesController, type: :controller do
 
     context 'invalid TIN' do
       let(:country_code) { 'AU' }
-      let(:tin) { '12345' }
 
-      specify do
+      it 'response error cause invalid length' do
+        tin = '12345'
         get(:index, params: { tin:, country_code: })
 
         expect(json_response['valid']).to eq(false)
         expect(json_response['tin_type']).to be_nil
         expect(json_response['formatted_tin']).to be_nil
         expect(json_response['errors']).to eq([I18n.t('tin.validates.invalid_length')])
+      end
+
+      it 'response error cause algorithm validation' do
+        tin = '10120000005'
+        get(:index, params: { tin:, country_code: })
+
+        expect(json_response['valid']).to eq(false)
+        expect(json_response['tin_type']).to be_nil
+        expect(json_response['formatted_tin']).to be_nil
+        expect(json_response['errors']).to include(I18n.t('tin.validates.invalid_tin'))
       end
     end
 

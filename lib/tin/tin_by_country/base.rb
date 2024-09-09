@@ -9,13 +9,23 @@ module Tin
       end
 
       def validate
-        return { valid: false, errors: [I18n.t('tin.validates.invalid_length')] } unless tin_type
+        return invalid_response(I18n.t('tin.validates.invalid_length')) unless tin_type
+        return invalid_response(I18n.t('tin.validates.invalid_tin')) unless valid_tin?
 
         {
-          valid: valid_tin?,
+          valid: true,
           tin_type: "#{country_code}_#{tin_type}",
           formatted_tin: send("format_#{tin_type}"),
-          errors: valid_tin? ? [] : [I18n.t('tin.validates.invalid_tin')]
+          errors: []
+        }
+      end
+
+      private
+
+      def invalid_response(error_message)
+        {
+          valid: false,
+          errors: [error_message]
         }
       end
     end
